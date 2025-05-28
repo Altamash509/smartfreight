@@ -1,0 +1,3 @@
+echo import boto3 > s3_check.py
+echo s3 = boto3.resource('s3') >> s3_check.py
+echo for bucket in s3.buckets.all(): print(bucket.name) >> s3_check.py

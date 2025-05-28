@@ -1,0 +1,14 @@
+## dbt_project.yaml
+name: 'smartfreight_dbt'
+version: '1.0'
+profile: 'smartfreight_dbt'
+
+config-version: 2
+
+model-paths: ["models"]
+target-path: "target"
+clean-targets: ["target", "dbt_modules"]
+
+models:
+  smartfreight_dbt:
+    +materialized: view
