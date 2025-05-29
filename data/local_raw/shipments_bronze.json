@@ -1,102 +1,24 @@
 [
-    {
-        "shipment_id": "SHP8726",
-        "carrier": "DHL",
-        "status": "Delivered",
-        "origin_region": "North",
-        "destination_region": "East",
-        "weight_kg": 41.63,
-        "cost_usd": 379.38,
-        "shipment_date": "2025-05-29T19:05:31.358927"
-    },
-    {
-        "shipment_id": "SHP1547",
-        "carrier": "UPS",
-        "status": "Delivered",
-        "origin_region": "South",
-        "destination_region": "North",
-        "weight_kg": 11.6,
-        "cost_usd": 304.18,
-        "shipment_date": "2025-05-29T19:05:31.358927"
-    },
-    {
-        "shipment_id": "SHP3375",
-        "carrier": "DHL",
-        "status": "Delivered",
-        "origin_region": "West",
-        "destination_region": "East",
-        "weight_kg": 4.2,
-        "cost_usd": 29.5,
-        "shipment_date": "2025-05-29T19:05:31.358927"
-    },
-    {
-        "shipment_id": "SHP1264",
-        "carrier": "UPS",
-        "status": "Lost",
-        "origin_region": "East",
-        "destination_region": "East",
-        "weight_kg": 19.35,
-        "cost_usd": 84.32,
-        "shipment_date": "2025-05-29T19:05:31.358927"
-    },
-    {
-        "shipment_id": "SHP8246",
-        "carrier": "DHL",
-        "status": "Delayed",
-        "origin_region": "South",
-        "destination_region": "South",
-        "weight_kg": 15.75,
-        "cost_usd": 108.17,
-        "shipment_date": "2025-05-29T19:05:31.358927"
-    },
-    {
-        "shipment_id": "SHP4670",
-        "carrier": "UPS",
-        "status": "Delayed",
-        "origin_region": "South",
-        "destination_region": "East",
-        "weight_kg": 1.83,
-        "cost_usd": 282.29,
-        "shipment_date": "2025-05-29T19:05:31.358927"
-    },
-    {
-        "shipment_id": "SHP9451",
-        "carrier": "UPS",
-        "status": "In Transit",
-        "origin_region": "South",
-        "destination_region": "East",
-        "weight_kg": 45.73,
-        "cost_usd": 80.29,
-        "shipment_date": "2025-05-29T19:05:31.358927"
-    },
-    {
-        "shipment_id": "SHP1804",
-        "carrier": "USPS",
-        "status": "Delivered",
-        "origin_region": "West",
-        "destination_region": "East",
-        "weight_kg": 7.56,
-        "cost_usd": 128.78,
-        "shipment_date": "2025-05-29T19:05:31.358927"
-    },
-    {
-        "shipment_id": "SHP4133",
-        "carrier": "UPS",
-        "status": "Lost",
-        "origin_region": "South",
-        "destination_region": "South",
-        "weight_kg": 12.39,
-        "cost_usd": 221.71,
-        "shipment_date": "2025-05-29T19:05:31.358927"
-    },
-    {
-        "shipment_id": "SHP1023",
-        "carrier": "DHL",
-        "status": "Delivered",
-        "origin_region": "West",
-        "destination_region": "North",
-        "weight_kg": 13.39,
-        "cost_usd": 416.39,
-        "shipment_date": "2025-05-29T19:05:31.358927"
-    }
+  {
+    "shipment_id": "SHP001",
+    "origin": "New York",
+    "destination": "Los Angeles",
+    "status": "delivered",
+    "weight_kg": 250.5,
+    "cost_usd": 1300.75,
+    "departure_date": "2023-01-15",
+    "arrival_date": "2023-01-20",
+    "carrier": "DHL"
+  },
+  {
+    "shipment_id": "SHP002",
+    "origin": "Chicago",
+    "destination": "San Francisco",
+    "status": "in_transit",
+    "weight_kg": 180.0,
+    "cost_usd": 950.00,
+    "departure_date": "2023-01-18",
+    "arrival_date": null,
+    "carrier": "FedEx"
+  }
 ]

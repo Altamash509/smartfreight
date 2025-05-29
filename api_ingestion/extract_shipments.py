@@ -1,42 +1,43 @@
+# api_ingestion/extract_shipments.py
+
 import json
-import random
+import os
 import time
-from datetime import datetime
-from pathlib import Path
+from dotenv import load_dotenv
 
-OUTPUT_FILE = Path("data/local_raw/shipments_bronze.json")
+load_dotenv()
 
-def generate_shipment():
-    carriers = ["FedEx", "UPS", "DHL", "USPS"]
-    statuses = ["In Transit", "Delivered", "Delayed", "Lost"]
-    regions = ["North", "South", "East", "West"]
+# Load the input file path from .env
+INPUT_FILE = os.getenv("LOCAL_SHIPMENT_FILE")
 
-    shipment = {
-        "shipment_id": f"SHP{random.randint(1000, 9999)}",
-        "carrier": random.choice(carriers),
-        "status": random.choice(statuses),
-        "origin_region": random.choice(regions),
-        "destination_region": random.choice(regions),
-        "weight_kg": round(random.uniform(0.5, 50.0), 2),
-        "cost_usd": round(random.uniform(10.0, 500.0), 2),
-        "shipment_date": datetime.now().isoformat()
-    }
-    return shipment
+def fetch_data_with_retry(file_path, retries=3, delay=2):
+    for attempt in range(1, retries + 1):
+        try:
+            print(f"📦 Attempt {attempt}: Reading shipment data...")
+            with open(file_path, "r") as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"⚠️ Error reading file: {e}")
+            if attempt < retries:
+                print(f"🔁 Retrying in {delay} seconds...")
+                time.sleep(delay)
+            else:
+                raise
 
-def fetch_shipments(num_shipments=10):
-    shipments = []
-    for _ in range(num_shipments):
-        shipment = generate_shipment()
-        shipments.append(shipment)
-    return shipments
+def save_raw_json(data, output_path):
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    with open(output_path, "w") as f:
+        json.dump(data, f, indent=2)
+    print(f"✅ Saved raw data to {output_path}")
 
-def save_shipments(shipments, filepath=OUTPUT_FILE):
-    filepath.parent.mkdir(parents=True, exist_ok=True)
-    with open(filepath, "w") as f:
-        json.dump(shipments, f, indent=4)
-    print(f"Saved {len(shipments)} shipments to {filepath}")
+def main():
+    print("🚚 Starting shipment data extraction...")
+
+    data = fetch_data_with_retry(INPUT_FILE)
+
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    output_path = f"data/local_raw/shipments_bronze.json"
+    save_raw_json(data, output_path)
 
 if __name__ == "__main__":
-    shipments = fetch_shipments()
-    save_shipments(shipments)
-
+    main()
