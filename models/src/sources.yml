@@ -1,0 +1,31 @@
+version: 2
+
+sources:
+  - name: raw
+    database: SMARTFREIGHT
+    schema: RAW
+    tables:
+      - name: shipments
+        description: "Raw shipment tracking data from carriers"
+        columns:
+          - name: shipment_id
+            tests: [not_null, unique]
+          - name: carrier
+          - name: expected_delivery
+          - name: actual_delivery
+
+      - name: invoices
+        description: "Invoice and billing data"
+        columns:
+          - name: shipment_id
+            tests: [not_null]
+          - name: billed_amount
+          - name: actual_cost
+
+      - name: products
+        description: "Product metadata and classification"
+        columns:
+          - name: product_id
+            tests: [not_null, unique]
+          - name: product_name
+          - name: category
