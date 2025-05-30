@@ -1,0 +1,24 @@
+[
+  {
+    "shipment_id": "SHP001",
+    "origin": "New York",
+    "destination": "Los Angeles",
+    "status": "delivered",
+    "weight_kg": 250.5,
+    "cost_usd": 1300.75,
+    "departure_date": "2023-01-15",
+    "arrival_date": "2023-01-20",
+    "carrier": "DHL"
+  },
+  {
+    "shipment_id": "SHP002",
+    "origin": "Chicago",
+    "destination": "San Francisco",
+    "status": "in_transit",
+    "weight_kg": 180.0,
+    "cost_usd": 950.0,
+    "departure_date": "2023-01-18",
+    "arrival_date": null,
+    "carrier": "FedEx"
+  }
+]

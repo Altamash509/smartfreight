@@ -1,43 +1,75 @@
-# api_ingestion/extract_shipments.py
-
+import requests
 import json
-import os
-import time
-from dotenv import load_dotenv
+import logging
+from pathlib import Path
 
-load_dotenv()
+logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
 
-# Load the input file path from .env
-INPUT_FILE = os.getenv("LOCAL_SHIPMENT_FILE")
+API_URL = "https://smartfreight-api.onrender.com/shipments"
+LOCAL_FALLBACK_FILE = Path("data/local_raw/shipments_bronze.json")
+OUTPUT_FILE = Path("data/local_raw/shipments_extracted.json")
 
-def fetch_data_with_retry(file_path, retries=3, delay=2):
-    for attempt in range(1, retries + 1):
-        try:
-            print(f"📦 Attempt {attempt}: Reading shipment data...")
-            with open(file_path, "r") as f:
-                return json.load(f)
-        except Exception as e:
-            print(f"⚠️ Error reading file: {e}")
-            if attempt < retries:
-                print(f"🔁 Retrying in {delay} seconds...")
-                time.sleep(delay)
-            else:
-                raise
+def fetch_from_api():
+    logging.info("🚚 Starting shipment data extraction from API...")
+    try:
+        response = requests.get(API_URL)
+        response.raise_for_status()
+        data = response.json()
+        logging.info(f"✅ Fetched {len(data)} records from API.")
+        return data
+    except requests.exceptions.RequestException as e:
+        logging.error(f"❌ Error fetching data: {e}")
+        return None
 
-def save_raw_json(data, output_path):
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(output_path, "w") as f:
+def load_local_file():
+    logging.info(f"📂 Loading local fallback data from {LOCAL_FALLBACK_FILE}")
+    if LOCAL_FALLBACK_FILE.exists():
+        with open(LOCAL_FALLBACK_FILE, 'r') as f:
+            data = json.load(f)
+        logging.info(f"✅ Loaded {len(data)} records from local file.")
+        return data
+    else:
+        logging.warning("⚠️ Local fallback file not found.")
+        return None
+
+def save_data(data):
+    with open(OUTPUT_FILE, 'w') as f:
         json.dump(data, f, indent=2)
-    print(f"✅ Saved raw data to {output_path}")
+    logging.info(f"💾 Saved extracted data to {OUTPUT_FILE}")
 
 def main():
-    print("🚚 Starting shipment data extraction...")
-
-    data = fetch_data_with_retry(INPUT_FILE)
-
-    timestamp = time.strftime("%Y%m%d_%H%M%S")
-    output_path = f"data/local_raw/shipments_bronze.json"
-    save_raw_json(data, output_path)
+    data = fetch_from_api()
+    if data is None:
+        data = load_local_file()
+    if data:
+        save_data(data)
+    else:
+        logging.warning("⚠️ No data to save.")
 
 if __name__ == "__main__":
     main()
+
+# existing imports
+import logging
+import boto3
+from pathlib import Path
+
+# your existing extraction code here...
+
+# after you save the extracted JSON file locally, add this:
+
+def upload_to_s3():
+    s3 = boto3.client('s3')
+    bucket_name = "smartfreight-bronze-bucket-2025"  # replace with your bucket
+    s3_key = "shipments/shipments_extracted.json"
+    local_file_path = Path("data/local_raw/shipments_extracted.json")
+
+    try:
+        logging.info(f"Uploading {local_file_path} to s3://{bucket_name}/{s3_key}")
+        s3.upload_file(str(local_file_path), bucket_name, s3_key)
+        logging.info("Upload successful.")
+    except Exception as e:
+        logging.error(f"Failed to upload file to S3: {e}")
+
+# call this upload function at the end of your script
+upload_to_s3()
